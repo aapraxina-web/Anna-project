@@ -4,7 +4,9 @@ set pythonBin to ""
 
 repeat with candidate in pythonCandidates
 	set candidatePath to contents of candidate
-	if (do shell script "if [ -x " & quoted form of candidatePath & " ]; then echo yes; fi") is "yes" then
+	set probeCommand to "if [ -x " & (quoted form of candidatePath) & " ]; then echo yes; fi"
+	set probeResult to (do shell script probeCommand)
+	if probeResult is "yes" then
 		set pythonBin to candidatePath
 		exit repeat
 	end if
