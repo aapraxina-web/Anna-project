@@ -1,0 +1,23 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+BUNDLE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+SCRIPT_PATH="$BUNDLE_DIR/Resources/tic_tac_toe.py"
+export PYTHONPYCACHEPREFIX="${TMPDIR:-/tmp}/anna_pycache"
+
+if [[ -x /opt/homebrew/bin/python3 ]]; then
+  PYTHON_BIN="/opt/homebrew/bin/python3"
+elif [[ -x /usr/local/bin/python3 ]]; then
+  PYTHON_BIN="/usr/local/bin/python3"
+elif [[ -x /usr/bin/python3 ]]; then
+  PYTHON_BIN="/usr/bin/python3"
+else
+  osascript -e 'display alert "Python 3 не найден" message "Установите Python 3 и попробуйте снова." as critical'
+  exit 1
+fi
+
+if ! "$PYTHON_BIN" "$SCRIPT_PATH" >>/tmp/tic_tac_toe.log 2>&1; then
+  osascript -e 'display alert "Не удалось запустить игру" message "Подробности сохранены в /tmp/tic_tac_toe.log" as critical'
+  exit 1
+fi
